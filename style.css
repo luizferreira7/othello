@@ -1,0 +1,9 @@
+#tabuleiro {
+    justify-self: center;
+}
+div {
+    display: grid;
+}
+h1 {
+    justify-self: center;
+}
