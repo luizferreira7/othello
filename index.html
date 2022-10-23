@@ -10,9 +10,24 @@
     <title>Othello</title>
 </head>
 <body>
-    <div>
         <h1>Othello</h1>
+        <div id="pontuacao">
+            <div>
+                <span>Jogador 1</span>
+                <div class="circulo" style="background-color: black;"></div>
+                <span class="pontos" id="pontuacaoPretas">0</span>
+            </div>
+            <div>
+                <span class="pontos" id="pontuacaoBrancas">0</span>
+                <div class="circulo" style="background-color: white;"></div>
+                <span id="jogadorMaquina">Jogador 2</span>
+            </div>
+        </div>
+        <div class="botoes" id="divBotoes">
+            <p id="instrucoes">Selecione o modo de jogo</p>
+            <button id="modoJogador">Jogador vs Jogador</button>
+            <button id="modoMaquina">Jogador vs Maquina</button>
+        </div>
         <canvas id="tabuleiro"></canvas>
-    </div>
 </body>
 </html>

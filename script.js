@@ -1,3 +1,20 @@
+let tabuleiro = [];
+jogadorAtual = 0;
+let intX;
+let intY;
+
+function preencheTabuleiro() {
+    for (let i = 0; i < 8; i++) {
+        tabuleiro.push([]);
+        for (let j = 0; j < 8; j++) {
+            tabuleiro[i].push('X');
+        }
+    }
+    tabuleiro[3][3] = 'B';
+    tabuleiro[4][4] = 'B';
+    tabuleiro[3][4] = 'P';
+    tabuleiro[4][3] = 'P';
+}
 
 function montarTabuleiro() {
 
@@ -65,6 +82,70 @@ function adicionarPeca(cor, x, y) {
     ctx.fill();
 }
 
-window.onload=function(){
+function jogadaValida(x, y) {
+    intX = Math.floor(x/80);
+    intY = Math.floor(y/80);
+
+    if (x % 80 <= (intX + 0.1) || y % 80 <= (intY + 0.1)) {
+        return false;
+    }
+
+    if (tabuleiro[intX][intY] !== 'X') {
+        return false;
+    }
+
+    return true;
+}
+
+function jogada(cor, x, y) {
+    if (jogadaValida(x,y)) {
+        marcaTabuleiro(cor, intX, intY);
+
+        let cX = 40 + (intX * 80);
+        let cY = 40 + (intY * 80);
+    
+        adicionarPeca(cor, cX, cY);
+    
+        jogadorAtual += 1;
+    }
+}
+
+function marcaTabuleiro(cor, x,y) {
+    let peca;
+    if (cor === 'black') {
+        peca = 'P';
+    } else {
+        peca = 'B';
+    }
+    tabuleiro[x][y] = peca;
+}
+
+function iniciaJogo(elementHide, elementShow) {
     montarTabuleiro();
+    elementHide.style.display = 'none';
+    elementShow.style.display = 'flex';
+    preencheTabuleiro();
+
+    canvas.addEventListener('click', function(event) {
+        x = event.offsetX;
+        y = event.offsetY;
+        jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
+    });
+}
+
+window.onload=function(){
+    let btnMaquina = document.getElementById("modoMaquina");
+    let btnPlay = document.getElementById("modoJogador");
+    let divBotoes = document.getElementById("divBotoes");
+    let divPontuacao = document.getElementById("pontuacao");
+    let jogadorMaquina = document.getElementById("jogadorMaquina");
+
+    btnMaquina.addEventListener("click", () => {
+        iniciaJogo(divBotoes, divPontuacao);
+        jogadorMaquina.innerHTML = 'Maquina';
+    });
+    
+    btnPlay.addEventListener("click", () => {
+        iniciaJogo(divBotoes, divPontuacao);
+    });
 };

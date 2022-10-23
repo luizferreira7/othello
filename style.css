@@ -1,9 +1,47 @@
 #tabuleiro {
     justify-self: center;
+	margin: 10px;
 }
-div {
+body {
     display: grid;
+	justify-content: center;
 }
 h1 {
     justify-self: center;
+}
+
+button {
+	width: 150px;
+	display: inline-block;
+}
+
+.botoes {
+	display: inline-block;
+	justify-self: center;
+	justify-content: center;
+}
+
+#pontuacao {
+	display: none;
+	justify-self: center;
+	justify-content: space-between;
+	width: 300px;
+}
+
+p {
+	justify-self: center;
+	justify-content: center;
+	display: flex;
+}
+
+.circulo {
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	display: inline-block;
+	border: 1px solid;
+}
+
+.pontos {
+	margin: 5px;
 }
