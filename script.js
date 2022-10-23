@@ -94,7 +94,54 @@ function jogadaValida(x, y) {
         return false;
     }
 
-    return true;
+    let pecaJogador = 'P';
+
+    if (jogadorAtual % 2 !== 0) {
+        pecaJogador = 'B';
+    }
+
+    if (tabuleiro[intX+1][intY] === 'X' && tabuleiro[intX-1][intY] === 'X' &&
+        tabuleiro[intX][intY+1] === 'X' && tabuleiro[intX][intY-1] === 'X' && 
+        tabuleiro[intX+1][intY+1] === 'X' && tabuleiro[intX-1][intY-1] === 'X' &&
+        tabuleiro[intX+1][intY+1] === 'X' && tabuleiro[intX-1][intY-1] === 'X') {
+        return false;
+    }
+
+    let podeJogar = verificaPecaAoLado(pecaJogador);
+
+    if (typeof podeJogar !== 'boolean') {
+        podeJogar = true;
+    } 
+    
+    return podeJogar;
+}
+
+function verificaPecaAoLado(peca) {
+    if (tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
+        return (intX+1, intY);
+    } 
+    if (tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
+        return (intX-1, intY);
+    } 
+    if (tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
+        return (intX, intY+1);
+    }
+    if (tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
+        return (intX, intY-1);
+    }
+    if (tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
+        return (intX+1, intY+1);
+    }
+    if (tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
+        return (intX-1, intY-1);
+    }
+    if (tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
+        return (intX+1, intY-1);
+    }
+    if (tabuleiro[intX-1][intY+1] !== peca && tabuleiro[intX-1][intY+1] !== 'X') {
+        return (intX-1, intY+1);
+    }
+    return false;
 }
 
 function jogada(cor, x, y) {
