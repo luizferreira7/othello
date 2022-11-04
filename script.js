@@ -202,6 +202,102 @@ function jogadaValida(peca, intX, intY) {
     return false;
 }
 
+function virarPeca(intX, intY) {
+    
+    let peca = 'P';
+
+    if (jogadorAtual % 2 !== 0) {
+        peca = 'B';
+    }
+    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
+            let i  = intX+1; 
+            while (i < 8 && tabuleiro[i][intY] !== peca) {
+                tabuleiro[i][intY] = peca;
+                i++;
+            }
+    }
+
+    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
+        console.log(tabuleiro[intX]);
+        if (tabuleiro[intX].includes(peca)) {
+            let i  = intX-1; 
+            while (i > 0 && tabuleiro[i][intY] !== peca) {
+                tabuleiro[i][intY] = peca;
+                i--;
+        }
+        }
+        
+    } 
+
+    if (tabuleiro[intX][intY+1] !== undefined && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
+        
+        let i  = intY+1; 
+            while (i < 8 && tabuleiro[intX][i] !== peca) {
+                tabuleiro[intX][i] = peca;
+                i++;
+            }
+    }
+
+    if (tabuleiro[intX][intY-1] !== undefined && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
+        
+        let i  = intY-1; 
+            while (i > 0 && tabuleiro[intX][i] !== peca) {
+                tabuleiro[intX][i] = peca;
+                i--;
+            }
+    
+    }
+
+    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY+1] !== undefined && 
+        tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
+                    
+        let fim = intX > intY ? 8-intX : 8-intY ;
+
+        let i  = 2; 
+        while (i < fim && tabuleiro[intX+i][intY+i] !== peca) {
+            tabuleiro[intX+i][intY+i] = peca;
+            i++;
+        }
+    }
+
+    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY-1] !== undefined && 
+        tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
+
+        let fim = intX < intY ? intX : intY ;
+
+        let i  = 2; 
+        while (i < fim && tabuleiro[intX-i][intY-i] !== peca) {
+            tabuleiro[intX-i][intY-i] = peca;
+            i++;
+        }
+    }
+
+    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY-1] !== undefined && 
+        tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
+        
+        let fim = intX > intY ? 8-intX : 8-intY ;
+
+        let i  = 2; 
+        while (i < fim && tabuleiro[intX+i][intY-i] !== peca) {
+            tabuleiro[intX+i][intY-i] = peca;
+            i++;
+        }
+    }
+
+    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY+1] !== undefined && 
+        tabuleiro[intX-1][intY+1] !== peca && tabuleiro[intX-1][intY+1] !== 'X') {
+        
+            
+        let fim = intX < intY ? intX : intY ;
+
+        let i  = 2; 
+        while (i < fim && tabuleiro[intX-i][intY+i] !== peca) {
+            tabuleiro[intX-i][intY+i] = peca;
+            i++;
+        }
+    }
+}
+
 function jogada(cor, x, y) {
     let intX = Math.floor(x/80);
     let intY = Math.floor(y/80);
@@ -220,7 +316,7 @@ function jogada(cor, x, y) {
 
     if (contains) {
         marcaTabuleiro(cor, intX, intY);
-
+        virarPeca(intX,intY);
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
     
