@@ -303,6 +303,22 @@ function virarPeca(intX, intY) {
     }
 }
 
+function contaPontos() {
+    let pB = 0;
+    let pP = 0;
+    for (let i = 0; i < tabuleiro.length; i++) {
+        for (let j = 0; j < tabuleiro[i].length; j++) {
+            if (tabuleiro[i][j] === 'B') {
+                pB += 1;
+            } else if (tabuleiro[i][j] === 'P') {
+                pP += 1;
+            }
+        }
+    }
+    document.getElementById('pontuacaoPretas').innerHTML = pP;
+    document.getElementById('pontuacaoBrancas').innerHTML = pB;
+}
+
 function jogada(cor, x, y) {
     let intX = Math.floor(x/80);
     let intY = Math.floor(y/80);
@@ -337,6 +353,8 @@ function jogada(cor, x, y) {
     jogadasValidas.forEach(j => {
         adicionarPeca('#00bc8c', (j.x)*80+40, (j.y)*80+40);
     })
+
+    contaPontos();
 }
 
 function marcaTabuleiro(cor, x,y) {
