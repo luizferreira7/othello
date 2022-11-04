@@ -2,16 +2,22 @@ let tabuleiro = [];
 jogadorAtual = 0;
 
 function preencheTabuleiro() {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 12; i++) {
         tabuleiro.push([]);
-        for (let j = 0; j < 8; j++) {
-            tabuleiro[i].push('X');
+        for (let j = 0; j < 12; j++) {
+            if (i === 0 || i === 10 || j === 0 || j === 10 || 
+                i === 1 || i === 11 || j === 1 || j === 11) {
+                tabuleiro[i].push('?');
+            } else {
+                tabuleiro[i].push('X');
+            }
+            
         }
     }
-    tabuleiro[3][3] = 'B';
-    tabuleiro[4][4] = 'B';
-    tabuleiro[3][4] = 'P';
-    tabuleiro[4][3] = 'P';
+    tabuleiro[5][5] = 'B';
+    tabuleiro[6][6] = 'B';
+    tabuleiro[5][6] = 'P';
+    tabuleiro[6][5] = 'P';
 }
 
 function montarTabuleiro() {
@@ -62,26 +68,19 @@ function montarTabuleiro() {
         ctx.fillStyle = 'black';
         ctx.fill();
     }
-
-    // peças iniciais do jogo 
-
-    adicionarPeca('white',280,280);
-    adicionarPeca('black',360,280);
-    adicionarPeca('black',280,360);
-    adicionarPeca('white',360,360);
           
 }
 
 function updateTabuleiro() {
     montarTabuleiro();
-    for (let i = 0; i < tabuleiro.length; i++) {
-        for (let j = 0; j < tabuleiro[i].length; j++) {
+    for (let i = 2; i < tabuleiro.length; i++) {
+        for (let j = 2; j < tabuleiro[i].length; j++) {
             if (tabuleiro[i][j] !== 'X') {
                 let cor = 'white';
                 if (tabuleiro[i][j] === 'P') {
                     cor = 'black'
                 }
-                adicionarPeca(cor, i*80 + 40, j*80 + 40);
+                adicionarPeca(cor, (i-2)*80 + 40, (j-2)*80 + 40);
             }
         }
     }
@@ -104,9 +103,9 @@ function getJogadasValidas() {
 
     let jogadas = [];
 
-    for (let i = 0; i < tabuleiro.length; i++) {
-        for (let j = 0; j < tabuleiro[i].length; j++) {
-            if (jogadaValida(peca, i, j)) {
+    for (let i = 2; i < tabuleiro.length; i++) {
+        for (let j = 2; j < tabuleiro[i].length; j++) {
+            if (jogadaValida(peca, i, j, tabuleiro)) {
                 jogadas.push({x: i, y: j})
             }
         }
@@ -115,85 +114,103 @@ function getJogadasValidas() {
     return jogadas;
 }
 
-function jogadaValida(peca, intX, intY) {
+function jogadaValida(peca, intX, intY, tabuleiro) {
     if (tabuleiro[intX][intY] !== 'X') {
         return false;
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
-        for(let i = intX+1; i < 8; i++) {
+    if (tabuleiro[intX+1] !== '?' && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
+        for(let i = intX+1; i < 12; i++) {
+            if (tabuleiro[i][intY] === 'X') {
+                break;
+            }
             if (tabuleiro[i][intY] === peca) {
                 return true;
             }
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
-        for(let i = intX-1; i > 0; i--) {
+    if (tabuleiro[intX-1] !== '?' && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
+        for(let i = intX-1; i >= 2; i--) {
+            if (tabuleiro[i][intY] === 'X') {
+                break;
+            }
             if (tabuleiro[i][intY] === peca) {
                 return true;
             }
         }
     } 
 
-    if (tabuleiro[intX][intY+1] !== undefined && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
-        for(let i = intY+1; i < 8; i++) {
+    if (tabuleiro[intX][intY+1] !== '?' && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
+        for(let i = intY+1; i < 12; i++) {
+            if (tabuleiro[intX][i] === 'X') {
+                break;
+            }
             if (tabuleiro[intX][i] === peca) {
                 return true;
             }
         }
     }
 
-    if (tabuleiro[intX][intY-1] !== undefined && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
-        for(let i = intY-1; i > 0; i--) {
+    if (tabuleiro[intX][intY-1] !== '?' && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
+        for(let i = intY-1; i >= 2; i--) {
+            if (tabuleiro[intX][i] === 'X') {
+                break;
+            }
             if (tabuleiro[intX][i] === peca) {
                 return true;
             }
         }
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY+1] !== undefined && 
+    if (tabuleiro[intX+1][intY+1] !== '?' && 
         tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
                     
-        let fim = intX > intY ? 8-intX : 8-intY ;
+        let fim = intX > intY ? 12-intX : 12-intY ;
 
         for(let i = 2; i < fim; i++) {
+            if (tabuleiro[intX+i][intY+i] === 'X' || tabuleiro[intX+i][intY+i] === '?') {
+                break;
+            }
             if (tabuleiro[intX+i][intY+i] === peca) {
                 return true;
             }
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY-1] !== undefined && 
+    if (tabuleiro[intX-1][intY-1] !== '?' && 
         tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
 
-            let fim = intX < intY ? intX : intY ;
-
-            for(let i = 2; i < fim; i++) {
+            for(let i = 2; i < 12; i++) {
+                if (tabuleiro[intX-i][intY-i] === 'X' || tabuleiro[intX-i][intY-i] === '?') {
+                    break;
+                }
                 if (tabuleiro[intX-i][intY-i] === peca) {
                     return true;
                 }
             }
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY-1] !== undefined && 
+    if (tabuleiro[intX+1][intY-1] !== '?' && 
         tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
         
-        let fim = intX > intY ? 8-intX : 8-intY ;
-        for(let i = 2; i < fim; i++) {
+        for(let i = 2; i < 12; i++) {
+            if (tabuleiro[intX+i][intY-i] === 'X' || tabuleiro[intX+i][intY-i] === '?') {
+                break;
+            }
             if (tabuleiro[intX+i][intY-i] === peca) {
                 return true;
             }
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY+1] !== undefined && 
+    if (tabuleiro[intX-1][intY+1] !== '?' && 
         tabuleiro[intX-1][intY+1] !== peca && tabuleiro[intX-1][intY+1] !== 'X') {
         
-            
-        let fim = intX < intY ? intX : intY ;
-
-        for(let i = 2; i < fim; i++) {
+        for(let i = 2; i < 12; i++) {
+            if (tabuleiro[intX-i][intY+i] === 'X' || tabuleiro[intX-i][intY+i] === '?') {
+                break;
+            }
             if (tabuleiro[intX-i][intY+i] === peca) {
                 return true;
             }
@@ -202,112 +219,158 @@ function jogadaValida(peca, intX, intY) {
     return false;
 }
 
-function virarPeca(intX, intY) {
+function virarPeca(intX, intY, tabuleiro) {
     let peca = 'P';
 
     if (jogadorAtual % 2 !== 0) {
         peca = 'B';
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
+    if (tabuleiro[intX+1] !== '?' && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = intX+1; i < 8; i++) {
-            tabuleiroCopia[i][intY] = peca;
+        for(let i = intX+1; i < 12; i++) {
+            
+            if (tabuleiro[i][intY] === 'X') {
+                break;
+            }
             if (tabuleiro[i][intY] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[i][intY] = peca;
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
+    if (tabuleiro[intX-1] !== '?' && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = intX-1; i > 0; i--) {
-            tabuleiroCopia[i][intY] = peca;
+        for(let i = intX-1; i >= 2; i--) {
+            
+            if (tabuleiro[i][intY] === 'X') {
+                break;
+            }
             if (tabuleiro[i][intY] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[i][intY] = peca;
         }
     } 
 
-    if (tabuleiro[intX][intY+1] !== undefined && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
+    if (tabuleiro[intX][intY+1] !== '?' && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = intY+1; i < 8; i++) {
-            tabuleiroCopia[intX][i] = peca;
+        for(let i = intY+1; i < 12; i++) {
+            
+            if (tabuleiro[intX][i] === 'X') {
+                break;
+            }
+
             if (tabuleiro[intX][i] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[intX][i] = peca;
         }
     }
 
-    if (tabuleiro[intX][intY-1] !== undefined && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
+    if (tabuleiro[intX][intY-1] !== '?' && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = intY-1; i > 0; i--) {
-            tabuleiroCopia[intX][i] = peca;
+        for(let i = intY-1; i >= 2; i--) {
+            
+            if (tabuleiro[intX][i] === 'X') {
+                break;
+            }
+
             if (tabuleiro[intX][i] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[intX][i] = peca;
         }
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY+1] !== undefined && 
+    if (tabuleiro[intX+1][intY+1] !== '?' && 
         tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
                     
-        let fim = intX > intY ? 8-intX : 8-intY ;
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = 1; i < fim; i++) {
-            tabuleiroCopia[intX+i][intY+i] = peca;
+        for(let i = 1; i < 12; i++) {
+            if (tabuleiro[intX+i][intY+i] === 'X' || tabuleiro[intX+i][intY+i] === '?') {
+                break;
+            }
+            
             if (tabuleiro[intX+i][intY+i] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[intX+i][intY+i] = peca;
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY-1] !== undefined && 
+    if (tabuleiro[intX-1][intY-1] !== '?' && 
         tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
 
-            let fim = intX < intY ? intX : intY ;
             let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-            for(let i = 1; i < fim; i++) {
-                tabuleiroCopia[intX-i][intY-i] = peca;
+            for(let i = 1; i <= 12; i++) {
+                if (tabuleiro[intX-i][intY-i] === 'X' || tabuleiro[intX-i][intY-i] === '?') {
+                    break;
+                }
+                
                 if (tabuleiro[intX-i][intY-i] === peca) {
                     tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                    break;
                 }
+
+                tabuleiroCopia[intX-i][intY-i] = peca;
             }
     }
 
-    if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY-1] !== undefined && 
+    if (tabuleiro[intX+1][intY-1] !== '?' && 
         tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
         
-        let fim = intX > intY ? 8-intX : 8-intY ;
+            
+
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = 1; i < fim; i++) {
-            tabuleiroCopia[intX+i][intY-i] = peca;
+        for(let i = 1; i < 12; i++) {
+            if (tabuleiro[intX+i][intY-i] === 'X' || tabuleiro[intX+i][intY-i] === '?') {
+                break;
+            }
             if (tabuleiro[intX+i][intY-i] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+            tabuleiroCopia[intX+i][intY-i] = peca;
         }
     }
 
-    if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY+1] !== undefined && 
+    if (tabuleiro[intX-1][intY+1] !== '?' && 
         tabuleiro[intX-1][intY+1] !== peca && tabuleiro[intX-1][intY+1] !== 'X') {
         
-            
-        let fim = intX < intY ? intX : intY ;
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
-        for(let i = 1; i < fim; i++) {
-            tabuleiroCopia[intX-i][intY+i] = peca;
+        for(let i = 1; i <= 12; i++) {
+            if (tabuleiro[intX-i][intY+i] === 'X' || tabuleiro[intX-i][intY+i] === '?') {
+                break;
+            }
+            
             if (tabuleiro[intX-i][intY+i] === peca) {
                 tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                break;
             }
+
+            tabuleiroCopia[intX-i][intY+i] = peca;
         }
     }
+    return tabuleiro;
 }
 
 function contaPontos() {
     let pB = 0;
     let pP = 0;
-    for (let i = 0; i < tabuleiro.length; i++) {
-        for (let j = 0; j < tabuleiro[i].length; j++) {
+    for (let i = 2; i < tabuleiro.length; i++) {
+        for (let j = 2; j < tabuleiro[i].length; j++) {
             if (tabuleiro[i][j] === 'B') {
                 pB += 1;
             } else if (tabuleiro[i][j] === 'P') {
@@ -327,7 +390,7 @@ function jogada(cor, x, y) {
         return false;
     }
 
-    let jogada = {x: intX, y: intY};
+    let jogada = {x: intX+2, y: intY+2};
 
     let jogadasValidas = getJogadasValidas();
 
@@ -336,14 +399,20 @@ function jogada(cor, x, y) {
     });
 
     if (contains) {
-        marcaTabuleiro(cor, intX, intY);
-        virarPeca(intX,intY);
+        marcaTabuleiro(cor, intX+2, intY+2);
+        tabuleiro = virarPeca(intX+2,intY+2, tabuleiro);
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
     
         adicionarPeca(cor, cX, cY);
     
         jogadorAtual += 1;
+
+        if (jogadorAtual % 2 !== 0) {
+            document.getElementById('vez').innerHTML = "É a vez do Jogador 2";
+        } else {
+            document.getElementById('vez').innerHTML = "É a vez do Jogador 1";
+        }
     }
 
     updateTabuleiro();
@@ -351,7 +420,7 @@ function jogada(cor, x, y) {
     jogadasValidas = getJogadasValidas();
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x)*80+40, (j.y)*80+40);
+        adicionarPeca('#00bc8c', (j.x-2)*80+40, (j.y-2)*80+40);
     })
 
     contaPontos();
@@ -372,11 +441,12 @@ function iniciaJogo(elementHide, elementShow) {
     elementHide.style.display = 'none';
     elementShow.style.display = 'flex';
     preencheTabuleiro();
+    updateTabuleiro();
 
     let jogadasValidas = getJogadasValidas();
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x)*80+40, (j.y)*80+40);
+        adicionarPeca('#00bc8c', (j.x-2)*80+40, (j.y-2)*80+40);
     })
 
     canvas.addEventListener('click', function(event) {
@@ -384,6 +454,92 @@ function iniciaJogo(elementHide, elementShow) {
         y = event.offsetY;
         jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
     });
+}
+
+function calculaPontos(tabuleiro) {
+    let pP = 0;
+    for (let i = 2; i < tabuleiro.length; i++) {
+        for (let j = 2; j < tabuleiro[i].length; j++) {
+            if (tabuleiro[i][j] === 'P') {
+                pP += 1;
+            }
+        }
+    }
+
+    return pP;
+}
+
+function miniMax() {
+    let jogadasValidas = getJogadasValidas();
+
+    let min = {jogada: null, pontos: null};
+
+    for(j of jogadasValidas) {
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        tabuleiroCopia = virarPeca(j.x, j.y, tabuleiroCopia);
+
+        let pontos = calculaPontos(tabuleiroCopia)
+        if (min.pontos === null || min.pontos < pontos) {
+            min.pontos = pontos;
+            min.jogada = j;
+        }
+    }
+
+    return min;
+}
+
+function iniciaJogoComputador(elementHide, elementShow) {
+    montarTabuleiro();
+    elementHide.style.display = 'none';
+    elementShow.style.display = 'flex';
+    preencheTabuleiro();
+    updateTabuleiro();
+
+    let jogadasValidas = getJogadasValidas();
+
+    jogadasValidas.forEach(j => {
+        adicionarPeca('#00bc8c', (j.x-2)*80+40, (j.y-2)*80+40);
+    })
+
+    canvas.addEventListener('click', function(event) {
+        x = event.offsetX;
+        y = event.offsetY;
+        jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
+
+        setTimeout(function() { jogadaComputador('white') }, 2000);
+    });
+}
+
+function jogadaComputador(cor) {
+    let j = miniMax();
+
+    let intX = j.jogada.x;
+    let intY = j.jogada.y;
+
+    marcaTabuleiro(cor, intX, intY);
+    tabuleiro = virarPeca(intX,intY, tabuleiro);
+    let cX = 40 + ((intX-2) * 80);
+    let cY = 40 + ((intY-2) * 80);
+    
+    adicionarPeca(cor, cX, cY);
+    
+    jogadorAtual += 1;
+
+    if (jogadorAtual % 2 !== 0) {
+        document.getElementById('vez').innerHTML = "É a vez da Maquina";
+    } else {
+        document.getElementById('vez').innerHTML = "É a vez do Jogador 1";
+    }
+
+    updateTabuleiro();
+
+    jogadasValidas = getJogadasValidas();
+
+    jogadasValidas.forEach(j => {
+        adicionarPeca('#00bc8c', (j.x-2)*80+40, (j.y-2)*80+40);
+    })
+
+    contaPontos();
 }
 
 window.onload=function(){
@@ -394,7 +550,7 @@ window.onload=function(){
     let jogadorMaquina = document.getElementById("jogadorMaquina");
 
     btnMaquina.addEventListener("click", () => {
-        iniciaJogo(divBotoes, divPontuacao);
+        iniciaJogoComputador(divBotoes, divPontuacao);
         jogadorMaquina.innerHTML = 'Maquina';
     });
     
