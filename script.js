@@ -203,84 +203,88 @@ function jogadaValida(peca, intX, intY) {
 }
 
 function virarPeca(intX, intY) {
-    
     let peca = 'P';
 
     if (jogadorAtual % 2 !== 0) {
         peca = 'B';
     }
+
     if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY] !== peca && tabuleiro[intX+1][intY] !== 'X') {
-            let i  = intX+1; 
-            while (i < 8 && tabuleiro[i][intY] !== peca) {
-                tabuleiro[i][intY] = peca;
-                i++;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = intX+1; i < 8; i++) {
+            tabuleiroCopia[i][intY] = peca;
+            if (tabuleiro[i][intY] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
             }
+        }
     }
 
     if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY] !== peca && tabuleiro[intX-1][intY] !== 'X') {
-        console.log(tabuleiro[intX]);
-        if (tabuleiro[intX].includes(peca)) {
-            let i  = intX-1; 
-            while (i > 0 && tabuleiro[i][intY] !== peca) {
-                tabuleiro[i][intY] = peca;
-                i--;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = intX-1; i > 0; i--) {
+            tabuleiroCopia[i][intY] = peca;
+            if (tabuleiro[i][intY] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+            }
         }
-        }
-        
     } 
 
     if (tabuleiro[intX][intY+1] !== undefined && tabuleiro[intX][intY+1] !== peca && tabuleiro[intX][intY+1] !== 'X') {
-        
-        let i  = intY+1; 
-            while (i < 8 && tabuleiro[intX][i] !== peca) {
-                tabuleiro[intX][i] = peca;
-                i++;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = intY+1; i < 8; i++) {
+            tabuleiroCopia[intX][i] = peca;
+            if (tabuleiro[intX][i] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
             }
+        }
     }
 
     if (tabuleiro[intX][intY-1] !== undefined && tabuleiro[intX][intY-1] !== peca && tabuleiro[intX][intY-1] !== 'X') {
-        
-        let i  = intY-1; 
-            while (i > 0 && tabuleiro[intX][i] !== peca) {
-                tabuleiro[intX][i] = peca;
-                i--;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = intY-1; i > 0; i--) {
+            tabuleiroCopia[intX][i] = peca;
+            if (tabuleiro[intX][i] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
             }
-    
+        }
     }
 
     if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY+1] !== undefined && 
         tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
                     
         let fim = intX > intY ? 8-intX : 8-intY ;
-
-        let i  = 2; 
-        while (i < fim && tabuleiro[intX+i][intY+i] !== peca) {
-            tabuleiro[intX+i][intY+i] = peca;
-            i++;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = 1; i < fim; i++) {
+            tabuleiroCopia[intX+i][intY+i] = peca;
+            if (tabuleiro[intX+i][intY+i] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+            }
         }
     }
 
     if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY-1] !== undefined && 
         tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
 
-        let fim = intX < intY ? intX : intY ;
-
-        let i  = 2; 
-        while (i < fim && tabuleiro[intX-i][intY-i] !== peca) {
-            tabuleiro[intX-i][intY-i] = peca;
-            i++;
-        }
+            let fim = intX < intY ? intX : intY ;
+            let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+            for(let i = 1; i < fim; i++) {
+                tabuleiroCopia[intX-i][intY-i] = peca;
+                if (tabuleiro[intX-i][intY-i] === peca) {
+                    tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+                }
+            }
     }
 
     if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY-1] !== undefined && 
         tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
         
         let fim = intX > intY ? 8-intX : 8-intY ;
-
-        let i  = 2; 
-        while (i < fim && tabuleiro[intX+i][intY-i] !== peca) {
-            tabuleiro[intX+i][intY-i] = peca;
-            i++;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = 1; i < fim; i++) {
+            tabuleiroCopia[intX+i][intY-i] = peca;
+            if (tabuleiro[intX+i][intY-i] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+            }
         }
     }
 
@@ -289,11 +293,12 @@ function virarPeca(intX, intY) {
         
             
         let fim = intX < intY ? intX : intY ;
-
-        let i  = 2; 
-        while (i < fim && tabuleiro[intX-i][intY+i] !== peca) {
-            tabuleiro[intX-i][intY+i] = peca;
-            i++;
+        let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
+        for(let i = 1; i < fim; i++) {
+            tabuleiroCopia[intX-i][intY+i] = peca;
+            if (tabuleiro[intX-i][intY+i] === peca) {
+                tabuleiro = JSON.parse(JSON.stringify(tabuleiroCopia));
+            }
         }
     }
 }
