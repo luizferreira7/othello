@@ -155,7 +155,8 @@ function jogadaValida(peca, intX, intY) {
     if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY+1] !== undefined && 
         tabuleiro[intX+1][intY+1] !== peca && tabuleiro[intX+1][intY+1] !== 'X') {
                     
-        let fim = (8 - (intX+1)) < (8 - (intY+1)) ? (8 - (intX+1)) : (8 - (intY+1)) ;
+        let fim = intX > intY ? 8-intX : 8-intY ;
+
         for(let i = 2; i < fim; i++) {
             if (tabuleiro[intX+i][intY+i] === peca) {
                 return true;
@@ -166,7 +167,8 @@ function jogadaValida(peca, intX, intY) {
     if (tabuleiro[intX-1] !== undefined && tabuleiro[intX-1][intY-1] !== undefined && 
         tabuleiro[intX-1][intY-1] !== peca && tabuleiro[intX-1][intY-1] !== 'X') {
 
-            let fim = 8 - (intX-1) < 8 - (intY-1) ? 8 - (intX-1) : 8 - (intY-1) ;
+            let fim = intX < intY ? intX : intY ;
+
             for(let i = 2; i < fim; i++) {
                 if (tabuleiro[intX-i][intY-i] === peca) {
                     return true;
@@ -177,7 +179,7 @@ function jogadaValida(peca, intX, intY) {
     if (tabuleiro[intX+1] !== undefined && tabuleiro[intX+1][intY-1] !== undefined && 
         tabuleiro[intX+1][intY-1] !== peca && tabuleiro[intX+1][intY-1] !== 'X') {
         
-        let fim = 8 - (intX+1) < 8 - (intY-1) ? 8 - (intX+1) : 8 - (intY-1) ;
+        let fim = intX > intY ? 8-intX : 8-intY ;
         for(let i = 2; i < fim; i++) {
             if (tabuleiro[intX+i][intY-i] === peca) {
                 return true;
