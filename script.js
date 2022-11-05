@@ -1,5 +1,6 @@
 let tabuleiro = [];
 jogadorAtual = 0;
+let esperandoComputador = false;
 
 function preencheTabuleiro() {
     for (let i = 0; i < 12; i++) {
@@ -502,11 +503,14 @@ function iniciaJogoComputador(elementHide, elementShow) {
     })
 
     canvas.addEventListener('click', function(event) {
-        x = event.offsetX;
-        y = event.offsetY;
-        jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
-
-        setTimeout(function() { jogadaComputador('white') }, 2000);
+        if(!esperandoComputador) {
+            x = event.offsetX;
+            y = event.offsetY;
+            jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
+            esperandoComputador = true;
+            setTimeout(function() { jogadaComputador('white') }, 2000);
+        }
+        
     });
 }
 
@@ -540,6 +544,7 @@ function jogadaComputador(cor) {
     })
 
     contaPontos();
+    setTimeout(function() { esperandoComputador = false }, 1000);
 }
 
 window.onload=function(){
