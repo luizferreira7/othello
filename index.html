@@ -15,24 +15,31 @@
         <img width="600px" height="auto" src="assets/titulo-othello.png" alt="">
     </div>
         <div id="pontuacao">
-            <div>
-                <span>Jogador 1</span>
-                <div class="circulo" style="background-color: black;"></div>
-                <span class="pontos" id="pontuacaoPretas">2</span>
-            </div>
-            <div>
-                <span class="pontos" id="pontuacaoBrancas">2</span>
-                <div class="circulo" style="background-color: white;"></div>
-                <span id="jogadorMaquina">Jogador 2</span>
-            </div>
+            <table style="border: 2px solid; border-collapse: collapse; background-color: #00bc8c;">
+                <tr>
+                    <td>Nome</td>
+                    <td>Cor</td>
+                    <td>Pontuação</td>
+                </tr>
+                <tr>
+                    <td id="jogador1">Jogador 1</td>
+                    <td><div class="circulo" style="background-color: black;"></div></td>
+                    <td><span class="pontos" id="pontuacaoPretas">2</span></td>
+                </tr>
+                <tr>
+                    <td id="jogador2">Jogador 2</td>
+                    <td><div class="circulo" style="background-color: white;"></div></td>
+                    <td><span class="pontos" id="pontuacaoBrancas">2</span></td>
+                </tr>
+            </table>
         </div>
         <div id="divVez">
-            <span id="vez">É a vez do Jogador 1</span>
+            <span id="vez">-</span>
         </div>
         <div class="botoes" id="divBotoes">
             <p id="instrucoes">Selecione o modo de jogo</p>
             <button id="modoJogador">Jogador vs Jogador</button>
-            <button id="modoMaquina">Jogador vs Maquina</button>
+            <button id="modoMaquina">Jogador vs Máquina</button>
         </div>
         <canvas id="tabuleiro"></canvas>
 </body>

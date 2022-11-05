@@ -1,5 +1,7 @@
 let tabuleiro = [];
 jogadorAtual = 0;
+let jogador1 = 'Jogador 1';
+let jogador2 = 'Jogador 2';
 let esperandoComputador = false;
 
 function preencheTabuleiro() {
@@ -410,9 +412,9 @@ function jogada(cor, x, y) {
         jogadorAtual += 1;
 
         if (jogadorAtual % 2 !== 0) {
-            document.getElementById('vez').innerHTML = "É a vez do Jogador 2";
+            document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador2;
         } else {
-            document.getElementById('vez').innerHTML = "É a vez do Jogador 1";
+            document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador1;
         }
     }
 
@@ -490,6 +492,8 @@ function miniMax() {
 }
 
 function iniciaJogoComputador(elementHide, elementShow) {
+    jogador2 = 'Máquina';
+    document.getElementById('jogador2').innerHTML = jogador2;
     montarTabuleiro();
     elementHide.style.display = 'none';
     elementShow.style.display = 'flex';
@@ -530,9 +534,9 @@ function jogadaComputador(cor) {
     jogadorAtual += 1;
 
     if (jogadorAtual % 2 !== 0) {
-        document.getElementById('vez').innerHTML = "É a vez da Maquina";
+        document.getElementById('vez').innerHTML = "É a vez do(a) Máquina";
     } else {
-        document.getElementById('vez').innerHTML = "É a vez do Jogador 1";
+        document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador1;
     }
 
     updateTabuleiro();
@@ -559,12 +563,16 @@ window.onload=function(){
     preencheTabuleiro();
 
     btnMaquina.addEventListener("click", () => {
+        document.getElementById('jogador1').innerHTML = jogador1;
+        document.getElementById('vez').innerHTML = 'É a vez do(a) '+ jogador1;
         iniciaJogoComputador(divBotoes, divPontuacao);
         divVez.style.display = 'flex';
         jogadorMaquina.innerHTML = 'Maquina';
     });
     
     btnPlay.addEventListener("click", () => {
+        document.getElementById('jogador1').innerHTML =  jogador1;
+        document.getElementById('vez').innerHTML = 'É a vez do(a) '+ jogador1;
         iniciaJogo(divBotoes, divPontuacao);
         divVez.style.display = 'flex';
     });
