@@ -553,13 +553,19 @@ window.onload=function(){
     let divBotoes = document.getElementById("divBotoes");
     let divPontuacao = document.getElementById("pontuacao");
     let jogadorMaquina = document.getElementById("jogadorMaquina");
+    let divVez = document.getElementById("divVez");
+
+    montarTabuleiro();
+    preencheTabuleiro();
 
     btnMaquina.addEventListener("click", () => {
         iniciaJogoComputador(divBotoes, divPontuacao);
+        divVez.style.display = 'flex';
         jogadorMaquina.innerHTML = 'Maquina';
     });
     
     btnPlay.addEventListener("click", () => {
         iniciaJogo(divBotoes, divPontuacao);
+        divVez.style.display = 'flex';
     });
 };
