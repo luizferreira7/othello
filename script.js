@@ -20,7 +20,7 @@ imagePvIA.className = 'tooltipClass';
 
 let imageReiniciar = document.createElement('img');
 imageReiniciar.src = 'assets/reiniciar.png';
-imageReiniciar.style.width = '90px';
+imageReiniciar.style.width = '80px';
 imageReiniciar.style.height = '90px';
 imageReiniciar.style.borderRadius = '50%'
 imageReiniciar.title = "Reiniciar Jogo";
