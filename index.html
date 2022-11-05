@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,40 +11,50 @@
     <link rel="icon" href="assets/iconeOthello.png">
     <title>Othello</title>
 </head>
+
 <body>
     <div id="titulo">
         <img width="600px" height="auto" src="assets/titulo-othello.png" alt="">
     </div>
-        <div id="pontuacao">
-            <table style="border: 1.5px grey; border-collapse: collapse; background-color: #00bc8c;">
-                <tr>
-                    <td>Nome</td>
-                    <td>Cor</td>
-                    <td>Pontuação</td>
-                </tr>
-                <tr>
-                    <td id="jogador1">Jogador 1</td>
-                    <td><div class="circulo" style="background-color: black;"></div></td>
-                    <td><span class="pontos" id="pontuacaoPretas">2</span></td>
-                </tr>
-                <tr>
-                    <td id="jogador2">Jogador 2</td>
-                    <td><div class="circulo" style="background-color: white;"></div></td>
-                    <td><span class="pontos" id="pontuacaoBrancas">2</span></td>
-                </tr>
-            </table>
+    <div id="pontuacao">
+        <table style="border: 1.5px grey; border-collapse: collapse; background-color: #00bc8c;">
+            <tr>
+                <td>Nome</td>
+                <td>Cor</td>
+                <td>Pontuação</td>
+            </tr>
+            <tr>
+                <td id="jogador1">Jogador 1</td>
+                <td>
+                    <div class="circulo" style="background-color: black;"></div>
+                </td>
+                <td><span class="pontos" id="pontuacaoPretas">2</span></td>
+            </tr>
+            <tr>
+                <td id="jogador2">Jogador 2</td>
+                <td>
+                    <div class="circulo" style="background-color: white;"></div>
+                </td>
+                <td><span class="pontos" id="pontuacaoBrancas">2</span></td>
+            </tr>
+        </table>
+        <div class="reiniciaBotao">
+            <button id="reiniciar"></button>
         </div>
-        <div id="divVez">
-            <span id="vez">-</span>
-        </div>
-        <div class="botoes" id="divBotoes">
-            <p id="instrucoes">Selecione o modo de jogo:</p>
-            <button id="modoJogador"></button>
-            <button id="modoMaquina"></button>
-        </div>
-        <canvas id="tabuleiro"></canvas>
-        <div style="display: flex; justify-content: center; justify-self: center; margin: 15px;">
-            </table>
-        </div>
+
+    </div>
+    <div id="divVez">
+        <span id="vez">-</span>
+    </div>
+    <div class="botoes" id="divBotoes">
+        <p id="instrucoes">Selecione o modo de jogo:</p>
+        <button id="modoJogador"></button>
+        <button id="modoMaquina"></button>
+    </div>
+    <canvas id="tabuleiro"></canvas>
+    <div style="display: flex; justify-content: center; justify-self: center; margin: 15px;">
+        </table>
+    </div>
 </body>
+
 </html>
