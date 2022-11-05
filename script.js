@@ -540,6 +540,16 @@ function iniciaJogoComputador(elementHide, elementShow) {
     });
 }
 
+function reset() {
+    tabuleiro = [];
+    var old_element = document.getElementById("tabuleiro");
+    var new_element = old_element.cloneNode(true);
+    old_element.parentNode.replaceChild(new_element, old_element);
+    jogadorAtual = 0;
+    preencheTabuleiro();
+    updateTabuleiro();
+}
+
 function jogadaComputador(cor) {
     let j = miniMax();
 
@@ -602,5 +612,11 @@ window.onload = function () {
         document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
         iniciaJogo(divBotoes, divPontuacao);
         divVez.style.display = 'flex';
+    });
+
+    btnReiniciar.addEventListener("click", () => {
+        divBotoes.style.display = "inline-block";
+        divPontuacao.style.display = "none";
+        reset();
     });
 };
