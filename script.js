@@ -561,6 +561,7 @@ window.onload=function(){
 
     montarTabuleiro();
     preencheTabuleiro();
+    updateTabuleiro();
 
     btnMaquina.addEventListener("click", () => {
         document.getElementById('jogador1').innerHTML = jogador1;

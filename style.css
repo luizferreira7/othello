@@ -67,5 +67,6 @@ td {
 	border: 2px solid;
 	text-align: center;
 	vertical-align: center;
-	width: 100px;
+	width: 150px;
+	padding: 5px;
 }
