@@ -4,6 +4,20 @@ let jogador1 = 'Jogador 1';
 let jogador2 = 'Jogador 2';
 let esperandoComputador = false;
 
+let imagePvP = document.createElement('img');
+imagePvP.src = 'assets/pvp.png';   
+imagePvP.style.width = '90px';
+imagePvP.style.height = '90px';
+imagePvP.title = "Jogador vs Jogador";
+imagePvP.className = 'tooltipClass';
+
+let imagePvIA = document.createElement('img');
+imagePvIA.src = 'assets/pvai.png';   
+imagePvIA.style.width = '90px';
+imagePvIA.style.height = '90px';
+imagePvIA.title = "Jogador vs Máquina";
+imagePvIA.className = 'tooltipClass';
+
 function preencheTabuleiro() {
     for (let i = 0; i < 12; i++) {
         tabuleiro.push([]);
@@ -553,7 +567,9 @@ function jogadaComputador(cor) {
 
 window.onload=function(){
     let btnMaquina = document.getElementById("modoMaquina");
+    btnMaquina.appendChild(imagePvIA);
     let btnPlay = document.getElementById("modoJogador");
+    btnPlay.appendChild(imagePvP);
     let divBotoes = document.getElementById("divBotoes");
     let divPontuacao = document.getElementById("pontuacao");
     let jogadorMaquina = document.getElementById("jogadorMaquina");
