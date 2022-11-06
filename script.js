@@ -29,6 +29,14 @@ imageReiniciar.style.borderRadius = '50%'
 imageReiniciar.title = "Reiniciar Jogo";
 imageReiniciar.className = 'tooltipClass';
 
+let imageSalvar = document.createElement('img');
+imageSalvar.src = 'assets/salvar.png';
+imageSalvar.style.width = '25px';
+imageSalvar.style.height = '27px';
+imageSalvar.style.borderRadius = '50%'
+imageSalvar.title = "Salvar Jogador";
+imageSalvar.className = 'tooltipClass';
+
 function preencheTabuleiro() {
     for (let i = 0; i < 12; i++) {
         tabuleiro.push([]);
@@ -562,9 +570,11 @@ function iniciaJogoComputador(elementHide, elementShow) {
 
 function reset() {
     tabuleiro = [];
-    var old_element = document.getElementById("tabuleiro");
-    var new_element = old_element.cloneNode(true);
-    old_element.parentNode.replaceChild(new_element, old_element);
+
+    var old_element1 = document.getElementById("tabuleiro");
+    var new_element1 = old_element1.cloneNode(true);
+    old_element1.parentNode.replaceChild(new_element1, old_element1);
+
     jogadorAtual = 0;
     preencheTabuleiro();
     updateTabuleiro();
@@ -631,7 +641,6 @@ window.onload = function () {
     let divPontuacao = document.getElementById("pontuacao");
     let btnReiniciar = document.getElementById("reiniciar");
     btnReiniciar.appendChild(imageReiniciar);
-    let jogadorMaquina = document.getElementById("jogadorMaquina");
     let divVez = document.getElementById("divVez");
     let titulo = document.getElementById("titulo");
     let titulo2 = document.getElementById("titulo2");
@@ -641,35 +650,85 @@ window.onload = function () {
     updateTabuleiro();
 
     btnMaquina.addEventListener("click", () => {
-        titulo.style.display="none"
-        titulo2.style.display="flex"
-        document.getElementById('jogador1').innerHTML = jogador1;
-        document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
-        document.getElementById('pontuacaoBrancas').innerHTML = '2';
-        document.getElementById('pontuacaoPretas').innerHTML = '2';
-        iniciaJogoComputador(divBotoes, divPontuacao);
-        divVez.style.display = 'flex';
-        jogadorMaquina.innerHTML = 'Maquina';
+        document.getElementById('dialogJogador1').style.display='flex';
+        document.getElementById('nomeJogado1').innerHTML = 'Digite o nome do Jogador:';
+
+        let btnSalvar1 = document.getElementById('btnSalvar1');
+        btnSalvar1.appendChild(imageSalvar);
+        
+        btnSalvar1.addEventListener("click", () => {
+            jogador1 = document.getElementById('inputJogador1').value;
+            document.getElementById('inputJogador1').value = "";
+            document.getElementById('dialogJogador1').style.display='none';
+
+            titulo.style.display="none"
+            titulo2.style.display="flex"
+            document.getElementById('jogador1').innerHTML = jogador1;
+            document.getElementById('jogador2').innerHTML = jogador2;
+            document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
+            document.getElementById('pontuacaoBrancas').innerHTML = '2';
+            document.getElementById('pontuacaoPretas').innerHTML = '2';
+            iniciaJogoComputador(divBotoes, divPontuacao);
+            divVez.style.display = 'flex';
+            jogador2= 'Máquina';
+        });
     });
 
     btnPlay.addEventListener("click", () => {
-        titulo.style.display="none"
-        titulo2.style.display="flex"
-        document.getElementById('jogador1').innerHTML = jogador1;
-        document.getElementById('jogador2').innerHTML = jogador2;
-        document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
-        document.getElementById('pontuacaoBrancas').innerHTML = '2';
-        document.getElementById('pontuacaoPretas').innerHTML = '2';
-        iniciaJogo(divBotoes, divPontuacao);
-        divVez.style.display = 'flex';
+        document.getElementById('dialogJogador1').style.display='flex';
+        document.getElementById('nomeJogado1').innerHTML = 'Digite o nome do Jogador 1:';
+
+        let btnSalvar1 = document.getElementById('btnSalvar1');
+        btnSalvar1.appendChild(imageSalvar);
+
+        console.log('teste')
+
+        btnSalvar1.addEventListener('click', () => {
+            jogador1 = document.getElementById('inputJogador1').value;
+            document.getElementById('inputJogador1').value = "";
+            document.getElementById('dialogJogador1').style.display='none';
+            document.getElementById('dialogJogador2').style.display='flex';
+
+            var old_element5 = document.getElementById("btnSalvar2");
+            var new_element5 = old_element5.cloneNode(true);
+            old_element5.parentNode.replaceChild(new_element5, old_element5);
+
+            let btnSalvar2 = document.getElementById('btnSalvar2');
+            btnSalvar2.appendChild(imageSalvar);
+
+            btnSalvar2.addEventListener('click', () => {
+                jogador2 = document.getElementById('inputJogador2').value;
+                document.getElementById('inputJogador2').value = "";
+                document.getElementById('dialogJogador2').style.display='none';
+    
+                titulo.style.display="none"
+                titulo2.style.display="flex"
+                document.getElementById('jogador1').innerHTML = jogador1;
+                document.getElementById('jogador2').innerHTML = jogador2;
+                document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
+                document.getElementById('pontuacaoBrancas').innerHTML = '2';
+                document.getElementById('pontuacaoPretas').innerHTML = '2';
+                iniciaJogo(divBotoes, divPontuacao);
+                divVez.style.display = 'flex';
+            });
+        });
     });
 
     btnReiniciar.addEventListener("click", () => {
-        titulo2.style.display="none"
-        titulo.style.display="flex"
+        titulo2.style.display="none";
+        titulo.style.display="flex";
         divBotoes.style.display = "inline-block";
         divPontuacao.style.display = "none";
         divVez.style.display= "none"
         reset();
+
+        let btnSalvar1 = document.getElementById('btnSalvar1');
+        while (btnSalvar1.childElementCount > 0) {
+            btnSalvar1.removeChild(btnSalvar1.lastChild)
+        }
+
+        var old_element4 = document.getElementById('btnSalvar1');
+        var new_element4 = old_element4.cloneNode(true);
+        old_element4.parentNode.replaceChild(new_element4, old_element4);
     });
 };
