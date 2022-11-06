@@ -594,12 +594,16 @@ window.onload = function () {
     btnReiniciar.appendChild(imageReiniciar);
     let jogadorMaquina = document.getElementById("jogadorMaquina");
     let divVez = document.getElementById("divVez");
+    let titulo = document.getElementById("titulo");
+    let titulo2 = document.getElementById("titulo2");
 
     montarTabuleiro();
     preencheTabuleiro();
     updateTabuleiro();
 
     btnMaquina.addEventListener("click", () => {
+        titulo.style.display="none"
+        titulo2.style.display="flex"
         document.getElementById('jogador1').innerHTML = jogador1;
         document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
         iniciaJogoComputador(divBotoes, divPontuacao);
@@ -608,6 +612,8 @@ window.onload = function () {
     });
 
     btnPlay.addEventListener("click", () => {
+        titulo.style.display="none"
+        titulo2.style.display="flex"
         document.getElementById('jogador1').innerHTML = jogador1;
         document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
         iniciaJogo(divBotoes, divPontuacao);
@@ -615,6 +621,8 @@ window.onload = function () {
     });
 
     btnReiniciar.addEventListener("click", () => {
+        titulo2.style.display="none"
+        titulo.style.display="flex"
         divBotoes.style.display = "inline-block";
         divPontuacao.style.display = "none";
         divVez.style.display= "none"
