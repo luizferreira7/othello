@@ -10,14 +10,14 @@ let pontosJogador2 = 0;
 let imagePvP = document.createElement('img');
 imagePvP.src = 'assets/pvp.png';
 imagePvP.style.width = '90px';
-imagePvP.style.height = '90px';
+imagePvP.style.height = '80px';
 imagePvP.title = "Jogador vs Jogador";
 imagePvP.className = 'tooltipClass';
 
 let imagePvIA = document.createElement('img');
 imagePvIA.src = 'assets/pvai.png';
 imagePvIA.style.width = '90px';
-imagePvIA.style.height = '90px';
+imagePvIA.style.height = '80px';
 imagePvIA.title = "Jogador vs Máquina";
 imagePvIA.className = 'tooltipClass';
 
