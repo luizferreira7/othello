@@ -130,7 +130,7 @@ function adicionarPeca(cor, x, y) {
     ctx.fill();
 }
 
-function getJogadasValidas() {
+function getJogadasValidas(tabuleiro) {
     let peca = 'P';
 
     if (jogadorAtual % 2 !== 0) {
@@ -422,6 +422,22 @@ function contaPontos() {
 }
 
 function jogada(cor, x, y) {
+    let jogadasValidas = getJogadasValidas(tabuleiro);
+
+    if (!jogadasValidas.length) {
+        let vencedor = "Empate!";
+
+        if (pontosJogador2 < pontosJogador1) {
+            vencedor = "O jogador: " + jogador1 + " venceu!";
+        }
+
+        if (pontosJogador2 > pontosJogador1) {
+            vencedor = "O jogador: " + jogador2 + " venceu!";
+        }
+
+        document.getElementById('vez').innerHTML = vencedor;
+    }
+
     let intX = Math.floor(x / 80);
     let intY = Math.floor(y / 80);
 
@@ -431,7 +447,7 @@ function jogada(cor, x, y) {
 
     let jogada = { x: intX + 2, y: intY + 2 };
 
-    let jogadasValidas = getJogadasValidas();
+    jogadasValidas = getJogadasValidas(tabuleiro);
 
     var contains = jogadasValidas.some(j => {
         return JSON.stringify(jogada) === JSON.stringify(j);
@@ -458,7 +474,7 @@ function jogada(cor, x, y) {
 
     contaPontos();
 
-    jogadasValidas = getJogadasValidas();
+    jogadasValidas = getJogadasValidas(tabuleiro);
 
     if (!jogadasValidas.length) {
         let vencedor = "Empate!";
@@ -479,6 +495,76 @@ function jogada(cor, x, y) {
     })
 }
 
+function jogadaJogadorMaquina(cor, x, y) {
+    let jogadasValidas = getJogadasValidas(tabuleiro);
+
+    if (!jogadasValidas.length) {
+        let vencedor = "Empate!";
+
+        if (pontosJogador2 < pontosJogador1) {
+            vencedor = "O jogador: " + jogador1 + " venceu!";
+        }
+
+        if (pontosJogador2 > pontosJogador1) {
+            vencedor = "O jogador: " + jogador2 + " venceu!";
+        }
+
+        document.getElementById('vez').innerHTML = vencedor;
+    }
+
+    let intX = Math.floor(x / 80);
+    let intY = Math.floor(y / 80);
+
+    if (x % 80 <= (intX + 0.1) || y % 80 <= (intY + 0.1)) {
+        return false;
+    }
+
+    let jogada = { x: intX + 2, y: intY + 2 };
+
+    jogadasValidas = getJogadasValidas(tabuleiro);
+
+    var contains = jogadasValidas.some(j => {
+        return JSON.stringify(jogada) === JSON.stringify(j);
+    });
+
+    if (contains) {
+        marcaTabuleiro(cor, intX + 2, intY + 2);
+        tabuleiro = virarPeca(intX + 2, intY + 2, tabuleiro);
+        let cX = 40 + (intX * 80);
+        let cY = 40 + (intY * 80);
+
+        adicionarPeca(cor, cX, cY);
+
+        jogadorAtual += 1;
+
+        if (jogadorAtual % 2 !== 0) {
+            document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador2;
+        } else {
+            document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador1;
+        }
+    }
+
+    updateTabuleiro();
+
+    contaPontos();
+
+    jogadasValidas = getJogadasValidas(tabuleiro);
+
+    if (!jogadasValidas.length) {
+        let vencedor = "Empate!";
+
+        if (pontosJogador2 < pontosJogador1) {
+            vencedor = "O jogador: " + jogador1 + " venceu!";
+        }
+
+        if (pontosJogador2 > pontosJogador1) {
+            vencedor = "O jogador: " + jogador2 + " venceu!";
+        }
+
+        document.getElementById('vez').innerHTML = vencedor;
+    }
+}
+
 function marcaTabuleiro(cor, x, y) {
     let peca;
     if (cor === 'black') {
@@ -496,7 +582,7 @@ function iniciaJogo(elementHide, elementShow) {
     preencheTabuleiro();
     updateTabuleiro();
 
-    let jogadasValidas = getJogadasValidas();
+    let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
         adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
@@ -510,30 +596,51 @@ function iniciaJogo(elementHide, elementShow) {
 }
 
 function calculaPontos(tabuleiro) {
-    let pP = 0;
+    let pontuacao = {pP: 0, pB: 0};
     for (let i = 2; i < tabuleiro.length; i++) {
         for (let j = 2; j < tabuleiro[i].length; j++) {
             if (tabuleiro[i][j] === 'P') {
-                pP += 1;
+                pontuacao.pP += 1;
+            } else if (tabuleiro[i][j] == 'B') {
+                pontuacao.pB += 1;
             }
         }
     }
 
-    return pP;
+    return pontuacao;
 }
 
 function miniMax() {
-    let jogadasValidas = getJogadasValidas();
+    let jogadasValidas = getJogadasValidas(tabuleiro);
 
-    let min = { jogada: null, pontos: null };
+    let min = { jogada: null, pontosJogador: null, pontosMaquina: null };
 
     for (j of jogadasValidas) {
         let tabuleiroCopia = JSON.parse(JSON.stringify(tabuleiro));
         tabuleiroCopia = virarPeca(j.x, j.y, tabuleiroCopia);
 
-        let pontos = calculaPontos(tabuleiroCopia)
-        if (min.pontos === null || min.pontos < pontos) {
-            min.pontos = pontos;
+        let jogadasValidasJogador = getJogadasValidas(tabuleiroCopia);
+
+        let pontosJogador = 0;
+
+        for (jj of jogadasValidasJogador) {
+            let tabuleiroCopiaJogador = JSON.parse(JSON.stringify(tabuleiroCopia));
+            tabuleiroCopiaJogador = virarPeca(j.x, j.y, tabuleiroCopiaJogador);
+
+            let pontuacao = calculaPontos(tabuleiroCopiaJogador)
+            if (pontosJogador < pontuacao.pP) {
+                pontosJogador = pontuacao.pP;
+            }
+        }
+
+        let pontuacao = calculaPontos(tabuleiroCopia);
+
+        let pontosMaquina = pontuacao.pB;
+
+        if ((min.pontosJogador === null && min.pontosMaquina === null) || 
+            (pontosJogador < min.pontosJogador && pontosMaquina > min.pontosMaquina)) {
+            min.pontosJogador = pontosJogador;
+            min.pontosMaquina = pontosMaquina;
             min.jogada = j;
         }
     }
@@ -550,7 +657,7 @@ function iniciaJogoComputador(elementHide, elementShow) {
     preencheTabuleiro();
     updateTabuleiro();
 
-    let jogadasValidas = getJogadasValidas();
+    let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
         adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
@@ -560,7 +667,7 @@ function iniciaJogoComputador(elementHide, elementShow) {
         if (!esperandoComputador) {
             x = event.offsetX;
             y = event.offsetY;
-            jogada(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
+            jogadaJogadorMaquina(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
             esperandoComputador = true;
             setTimeout(function () { jogadaComputador('white') }, 2000);
         }
@@ -585,31 +692,7 @@ function reset() {
 }
 
 function jogadaComputador(cor) {
-    let j = miniMax();
-
-    let intX = j.jogada.x;
-    let intY = j.jogada.y;
-
-    marcaTabuleiro(cor, intX, intY);
-    tabuleiro = virarPeca(intX, intY, tabuleiro);
-    let cX = 40 + ((intX - 2) * 80);
-    let cY = 40 + ((intY - 2) * 80);
-
-    adicionarPeca(cor, cX, cY);
-
-    jogadorAtual += 1;
-
-    if (jogadorAtual % 2 !== 0) {
-        document.getElementById('vez').innerHTML = "É a vez do(a) Máquina";
-    } else {
-        document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador1;
-    }
-
-    updateTabuleiro();
-
-    contaPontos();
-
-    jogadasValidas = getJogadasValidas();
+    let jogadasValidas = getJogadasValidas(tabuleiro);
 
     if (!jogadasValidas.length) {
         let vencedor = "Empate!";
@@ -623,13 +706,55 @@ function jogadaComputador(cor) {
         }
 
         document.getElementById('vez').innerHTML = vencedor;
+    } 
+
+    let j = miniMax();
+
+    if (j.jogada !== null) {
+        let intX = j.jogada.x;
+        let intY = j.jogada.y;
+    
+        marcaTabuleiro(cor, intX, intY);
+        tabuleiro = virarPeca(intX, intY, tabuleiro);
+        let cX = 40 + ((intX - 2) * 80);
+        let cY = 40 + ((intY - 2) * 80);
+    
+        adicionarPeca(cor, cX, cY);
+    
+        jogadorAtual += 1;
+    
+        if (jogadorAtual % 2 !== 0) {
+            document.getElementById('vez').innerHTML = "É a vez do(a) Máquina";
+        } else {
+            document.getElementById('vez').innerHTML = "É a vez do(a) " + jogador1;
+        }
+    
+        updateTabuleiro();
+    
+        contaPontos();
+    
+        jogadasValidas = getJogadasValidas(tabuleiro);
+    
+        if (!jogadasValidas.length) {
+            let vencedor = "Empate!";
+    
+            if (pontosJogador2 < pontosJogador1) {
+                vencedor = "O jogador: " + jogador1 + " venceu!";
+            }
+    
+            if (pontosJogador2 > pontosJogador1) {
+                vencedor = "O jogador: " + jogador2 + " venceu!";
+            }
+    
+            document.getElementById('vez').innerHTML = vencedor;
+        }
+    
+        jogadasValidas.forEach(j => {
+            adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        })
+    
+        setTimeout(function () { esperandoComputador = false }, 1000);
     }
-
-    jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
-    })
-
-    setTimeout(function () { esperandoComputador = false }, 1000);
 }
 
 window.onload = function () {
