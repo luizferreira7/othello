@@ -617,6 +617,7 @@ window.onload = function () {
     btnReiniciar.addEventListener("click", () => {
         divBotoes.style.display = "inline-block";
         divPontuacao.style.display = "none";
+        divVez.style.display= "none"
         reset();
     });
 };
