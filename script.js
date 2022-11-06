@@ -681,8 +681,6 @@ window.onload = function () {
         let btnSalvar1 = document.getElementById('btnSalvar1');
         btnSalvar1.appendChild(imageSalvar);
 
-        console.log('teste')
-
         btnSalvar1.addEventListener('click', () => {
             jogador1 = document.getElementById('inputJogador1').value;
             document.getElementById('inputJogador1').value = "";
