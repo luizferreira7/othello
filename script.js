@@ -4,6 +4,9 @@ let jogador1 = 'Jogador 1';
 let jogador2 = 'Jogador 2';
 let esperandoComputador = false;
 
+let pontosJogador1 = 0;
+let pontosJogador2 = 0;
+
 let imagePvP = document.createElement('img');
 imagePvP.src = 'assets/pvp.png';
 imagePvP.style.width = '90px';
@@ -405,6 +408,9 @@ function contaPontos() {
     }
     document.getElementById('pontuacaoPretas').innerHTML = pP;
     document.getElementById('pontuacaoBrancas').innerHTML = pB;
+
+    pontosJogador1 = pP;
+    pontosJogador2 = pB;
 }
 
 function jogada(cor, x, y) {
@@ -442,13 +448,27 @@ function jogada(cor, x, y) {
 
     updateTabuleiro();
 
+    contaPontos();
+
     jogadasValidas = getJogadasValidas();
+
+    if (!jogadasValidas.length) {
+        let vencedor = "Empate!";
+
+        if (pontosJogador2 < pontosJogador1) {
+            vencedor = "O jogador: " + jogador1 + " venceu!";
+        }
+
+        if (pontosJogador2 > pontosJogador1) {
+            vencedor = "O jogador: " + jogador2 + " venceu!";
+        }
+
+        document.getElementById('vez').innerHTML = vencedor;
+    }
 
     jogadasValidas.forEach(j => {
         adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
-
-    contaPontos();
 }
 
 function marcaTabuleiro(cor, x, y) {
@@ -548,6 +568,10 @@ function reset() {
     jogadorAtual = 0;
     preencheTabuleiro();
     updateTabuleiro();
+    pontosJogador1 = 0;
+    pontosJogador2 = 0;
+    jogador1 = 'Jogador 1';
+    jogador2 = 'Jogador 2';
 }
 
 function jogadaComputador(cor) {
@@ -573,13 +597,28 @@ function jogadaComputador(cor) {
 
     updateTabuleiro();
 
+    contaPontos();
+
     jogadasValidas = getJogadasValidas();
+
+    if (!jogadasValidas.length) {
+        let vencedor = "Empate!";
+
+        if (pontosJogador2 < pontosJogador1) {
+            vencedor = "O jogador: " + jogador1 + " venceu!";
+        }
+
+        if (pontosJogador2 > pontosJogador1) {
+            vencedor = "O jogador: " + jogador2 + " venceu!";
+        }
+
+        document.getElementById('vez').innerHTML = vencedor;
+    }
 
     jogadasValidas.forEach(j => {
         adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 
-    contaPontos();
     setTimeout(function () { esperandoComputador = false }, 1000);
 }
 
@@ -606,6 +645,8 @@ window.onload = function () {
         titulo2.style.display="flex"
         document.getElementById('jogador1').innerHTML = jogador1;
         document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
+        document.getElementById('pontuacaoBrancas').innerHTML = '2';
+        document.getElementById('pontuacaoPretas').innerHTML = '2';
         iniciaJogoComputador(divBotoes, divPontuacao);
         divVez.style.display = 'flex';
         jogadorMaquina.innerHTML = 'Maquina';
@@ -615,7 +656,10 @@ window.onload = function () {
         titulo.style.display="none"
         titulo2.style.display="flex"
         document.getElementById('jogador1').innerHTML = jogador1;
+        document.getElementById('jogador2').innerHTML = jogador2;
         document.getElementById('vez').innerHTML = 'É a vez do(a) ' + jogador1;
+        document.getElementById('pontuacaoBrancas').innerHTML = '2';
+        document.getElementById('pontuacaoPretas').innerHTML = '2';
         iniciaJogo(divBotoes, divPontuacao);
         divVez.style.display = 'flex';
     });
