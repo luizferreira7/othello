@@ -160,7 +160,7 @@ div.bt-menu:hover{
 
 div.bt-menu:hover .blur{
 	height: 220px;
-	background-color:#00bc8c;
+	background-color:#19715e;
 	transition: width 0.5s, height 0.8s;
 }
 
