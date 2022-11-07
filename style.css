@@ -181,7 +181,7 @@ div.bt-menu:hover ul.menu {
 ul.menu li{
 	display: inline-block;
 	width: 100%;
-	font-size: large;
+	font-size: small;
 	font-weight: bold;
 	color: rgb(255, 255, 255);
 	text-shadow:
@@ -196,7 +196,7 @@ ul.menu li{
     position: absolute;
     top: 40%;
     z-index:50;
-    width: 370px;
+    width: 400px;
     background-color: #00bc8c;
     border:5px solid black;
 }
