@@ -4,6 +4,12 @@ let jogador1 = 'Jogador 1';
 let jogador2 = 'Jogador 2';
 let esperandoComputador = false;
 
+let corPeca;
+let xPeca;
+let yPeca;
+
+let pecas= new Set();
+
 let pontosJogador1 = 0;
 let pontosJogador2 = 0;
 
@@ -36,6 +42,14 @@ imageSalvar.style.height = '27px';
 imageSalvar.style.borderRadius = '50%'
 imageSalvar.title = "Salvar Jogador";
 imageSalvar.className = 'tooltipClass';
+
+let imageFechar = document.createElement('img');
+imageFechar.src = 'assets/close-icon.png';
+imageFechar.style.width = '23px';
+imageFechar.style.height = '26px';
+imageFechar.style.borderRadius = '50%'
+imageFechar.title = "Fechar Dialog";
+imageFechar.className = 'tooltipClass';
 
 function preencheTabuleiro() {
     for (let i = 0; i < 12; i++) {
@@ -84,6 +98,11 @@ function montarTabuleiro() {
     ctx.stroke();
 
 
+    bolinhas();
+
+}
+
+function bolinhas() {
     for (var i = 1; i < 5; i++) {
         let x = 160;
         let y = 160;
@@ -104,31 +123,96 @@ function montarTabuleiro() {
         ctx.fillStyle = 'black';
         ctx.fill();
     }
-
 }
 
 function updateTabuleiro() {
-    montarTabuleiro();
+
+    for (let peca of pecas) {
+        if (peca.cor === '#00bc8c') {
+            peca.remove();
+            pecas.delete(peca);
+        }
+    }
+
     for (let i = 2; i < tabuleiro.length; i++) {
         for (let j = 2; j < tabuleiro[i].length; j++) {
-            if (tabuleiro[i][j] !== 'X') {
+            if (tabuleiro[i][j] !== 'X' && tabuleiro[i][j] !== '?') {
                 let cor = 'white';
                 if (tabuleiro[i][j] === 'P') {
                     cor = 'black'
                 }
-                adicionarPeca(cor, (i - 2) * 80 + 40, (j - 2) * 80 + 40);
+                adicionaPeca(cor, (i - 2) * 80 + 40, (j - 2) * 80 + 40);
             }
         }
     }
 }
 
-function adicionarPeca(cor, x, y) {
-    ctx.beginPath();
-    ctx.arc(x, y, 35, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fillStyle = cor;
-    ctx.fill();
+function adicionaPeca(cor, x, y) {
+    if (!pecas.length) {
+        pecaNova = new Peca(cor, x, y);
+        pecas.add(pecaNova);
+    }
+    for (let peca of pecas) {
+        if (peca.x === x && peca.y === y) {
+            peca.cor=cor;
+            peca.update();
+        } else {
+            pecaNova = new Peca(cor, x, y);
+            pecas.add(pecaNova);
+        }
+    }
+
+    
 }
+
+class Peca {
+    constructor(cor, x, y) {
+        this.x = x;
+        this.y = y;
+        this.cor = cor;
+        this.opacity = 0;
+
+        this.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 35, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.globalAlpha=this.opacity/100;
+            ctx.fillStyle = cor;
+            ctx.fill();
+        };
+
+        this.incrementOpacity = function () {
+            this.opacity += 1;
+            for (let peca of pecas) {
+                if (peca.x === this.x && peca.y === this.y && peca.opacity !== this.opacity) {
+                    pecas.delete(peca);
+                }
+            }
+        }
+
+        this.remove = function () {
+            ctx.clearRect(this.x - 38.5, y - 38.5 , 77, 77);
+            bolinhas();
+        }
+
+        this.update = function () {
+            if (this.opacity < 110) {
+                this.incrementOpacity();
+                console.log('teste')
+            }
+            this.draw();
+        };
+    }
+}
+
+function start() {
+	for(var peca of pecas) {
+            peca.update();
+	}
+	requestAnimationFrame(start);
+}
+start();
 
 function getJogadasValidas(tabuleiro) {
     let peca = 'P';
@@ -459,7 +543,7 @@ function jogada(cor, x, y) {
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
 
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
 
         jogadorAtual += 1;
 
@@ -491,7 +575,7 @@ function jogada(cor, x, y) {
     }
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 }
 
@@ -533,7 +617,7 @@ function jogadaJogadorMaquina(cor, x, y) {
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
 
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
 
         jogadorAtual += 1;
 
@@ -585,7 +669,8 @@ function iniciaJogo(elementHide, elementShow) {
     let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 
     canvas.addEventListener('click', function (event) {
@@ -660,7 +745,7 @@ function iniciaJogoComputador(elementHide, elementShow) {
     let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 
     canvas.addEventListener('click', function (event) {
@@ -677,12 +762,14 @@ function iniciaJogoComputador(elementHide, elementShow) {
 
 function reset() {
     tabuleiro = [];
+    pecas = new Set();
 
     var old_element1 = document.getElementById("tabuleiro");
     var new_element1 = old_element1.cloneNode(true);
     old_element1.parentNode.replaceChild(new_element1, old_element1);
 
     jogadorAtual = 0;
+    montarTabuleiro();
     preencheTabuleiro();
     updateTabuleiro();
     pontosJogador1 = 0;
@@ -719,7 +806,7 @@ function jogadaComputador(cor) {
         let cX = 40 + ((intX - 2) * 80);
         let cY = 40 + ((intY - 2) * 80);
     
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
     
         jogadorAtual += 1;
     
@@ -748,9 +835,10 @@ function jogadaComputador(cor) {
     
             document.getElementById('vez').innerHTML = vencedor;
         }
-    
+
         jogadasValidas.forEach(j => {
-            adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+            
+            adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
         })
     
         setTimeout(function () { esperandoComputador = false }, 1000);
@@ -797,6 +885,32 @@ window.onload = function () {
             divVez.style.display = 'flex';
             jogador2= 'Máquina';
         });
+
+        let btnFecharDialog1 = document.getElementById('fecharDialog1');
+        btnFecharDialog1.appendChild(imageFechar);
+
+        btnFecharDialog1.addEventListener("click", () => {
+            document.getElementById('inputJogador1').value = "";
+
+            titulo2.style.display="none";
+            titulo.style.display="flex";
+            divBotoes.style.display = "inline-block";
+            divPontuacao.style.display = "none";
+            divVez.style.display= "none"
+            reset();
+    
+            let btnSalvar1 = document.getElementById('btnSalvar1');
+            while (btnSalvar1.childElementCount > 0) {
+                btnSalvar1.removeChild(btnSalvar1.lastChild)
+            }
+    
+            var old_element4 = document.getElementById('btnSalvar1');
+            var new_element4 = old_element4.cloneNode(true);
+            old_element4.parentNode.replaceChild(new_element4, old_element4);
+    
+            document.getElementById('dialogJogador1').style.display='none';
+            document.getElementById('dialogJogador2').style.display='none';
+        });
     });
 
     btnPlay.addEventListener("click", () => {
@@ -834,6 +948,67 @@ window.onload = function () {
                 iniciaJogo(divBotoes, divPontuacao);
                 divVez.style.display = 'flex';
             });
+
+            let btnFecharDialog2 = document.getElementById('fecharDialog2');
+            btnFecharDialog2.appendChild(imageFechar);
+
+            btnFecharDialog2.addEventListener("click", () => {
+                document.getElementById('inputJogador2').value = "";
+
+                titulo2.style.display="none";
+                titulo.style.display="flex";
+                divBotoes.style.display = "inline-block";
+                divPontuacao.style.display = "none";
+                divVez.style.display= "none"
+                reset();
+        
+                let btnSalvar2 = document.getElementById('btnSalvar2');
+                while (btnSalvar2.childElementCount > 0) {
+                    btnSalvar2.removeChild(btnSalvar2.lastChild)
+                }
+        
+                var old_element6 = document.getElementById("btnSalvar2");
+                var new_element6 = old_element6.cloneNode(true);
+                old_element6.parentNode.replaceChild(new_element6, old_element6);
+
+                let btnSalvar1 = document.getElementById('btnSalvar1');
+                while (btnSalvar1.childElementCount > 0) {
+                    btnSalvar1.removeChild(btnSalvar1.lastChild)
+                }
+        
+                var old_element4 = document.getElementById('btnSalvar1');
+                var new_element4 = old_element4.cloneNode(true);
+                old_element4.parentNode.replaceChild(new_element4, old_element4);
+        
+                document.getElementById('dialogJogador1').style.display='none';
+                document.getElementById('dialogJogador2').style.display='none';
+            });
+        });
+
+        let btnFecharDialog1 = document.getElementById('fecharDialog1');
+        btnFecharDialog1.appendChild(imageFechar);
+
+        btnFecharDialog1.addEventListener("click", () => {
+            document.getElementById('inputJogador1').value = "";
+
+            titulo2.style.display="none";
+            titulo.style.display="flex";
+            divBotoes.style.display = "inline-block";
+            divPontuacao.style.display = "none";
+            divVez.style.display= "none"
+            reset();
+    
+            let btnSalvar1 = document.getElementById('btnSalvar1');
+            while (btnSalvar1.childElementCount > 0) {
+                btnSalvar1.removeChild(btnSalvar1.lastChild)
+            }
+    
+            var old_element4 = document.getElementById('btnSalvar1');
+            var new_element4 = old_element4.cloneNode(true);
+            old_element4.parentNode.replaceChild(new_element4, old_element4);
+    
+            document.getElementById('dialogJogador1').style.display='none';
+            document.getElementById('dialogJogador2').style.display='none';
         });
     });
 
@@ -853,5 +1028,8 @@ window.onload = function () {
         var old_element4 = document.getElementById('btnSalvar1');
         var new_element4 = old_element4.cloneNode(true);
         old_element4.parentNode.replaceChild(new_element4, old_element4);
+
+        document.getElementById('dialogJogador1').style.display='none';
+        document.getElementById('dialogJogador2').style.display='none';
     });
 };
