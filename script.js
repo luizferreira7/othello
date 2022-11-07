@@ -43,6 +43,14 @@ imageSalvar.style.borderRadius = '50%'
 imageSalvar.title = "Salvar Jogador";
 imageSalvar.className = 'tooltipClass';
 
+let imageFechar = document.createElement('img');
+imageFechar.src = 'assets/close-icon.png';
+imageFechar.style.width = '23px';
+imageFechar.style.height = '26px';
+imageFechar.style.borderRadius = '50%'
+imageFechar.title = "Fechar Dialog";
+imageFechar.className = 'tooltipClass';
+
 function preencheTabuleiro() {
     for (let i = 0; i < 12; i++) {
         tabuleiro.push([]);
@@ -877,6 +885,32 @@ window.onload = function () {
             divVez.style.display = 'flex';
             jogador2= 'Máquina';
         });
+
+        let btnFecharDialog1 = document.getElementById('fecharDialog1');
+        btnFecharDialog1.appendChild(imageFechar);
+
+        btnFecharDialog1.addEventListener("click", () => {
+            document.getElementById('inputJogador1').value = "";
+
+            titulo2.style.display="none";
+            titulo.style.display="flex";
+            divBotoes.style.display = "inline-block";
+            divPontuacao.style.display = "none";
+            divVez.style.display= "none"
+            reset();
+    
+            let btnSalvar1 = document.getElementById('btnSalvar1');
+            while (btnSalvar1.childElementCount > 0) {
+                btnSalvar1.removeChild(btnSalvar1.lastChild)
+            }
+    
+            var old_element4 = document.getElementById('btnSalvar1');
+            var new_element4 = old_element4.cloneNode(true);
+            old_element4.parentNode.replaceChild(new_element4, old_element4);
+    
+            document.getElementById('dialogJogador1').style.display='none';
+            document.getElementById('dialogJogador2').style.display='none';
+        });
     });
 
     btnPlay.addEventListener("click", () => {
@@ -914,6 +948,67 @@ window.onload = function () {
                 iniciaJogo(divBotoes, divPontuacao);
                 divVez.style.display = 'flex';
             });
+
+            let btnFecharDialog2 = document.getElementById('fecharDialog2');
+            btnFecharDialog2.appendChild(imageFechar);
+
+            btnFecharDialog2.addEventListener("click", () => {
+                document.getElementById('inputJogador2').value = "";
+
+                titulo2.style.display="none";
+                titulo.style.display="flex";
+                divBotoes.style.display = "inline-block";
+                divPontuacao.style.display = "none";
+                divVez.style.display= "none"
+                reset();
+        
+                let btnSalvar2 = document.getElementById('btnSalvar2');
+                while (btnSalvar2.childElementCount > 0) {
+                    btnSalvar2.removeChild(btnSalvar2.lastChild)
+                }
+        
+                var old_element6 = document.getElementById("btnSalvar2");
+                var new_element6 = old_element6.cloneNode(true);
+                old_element6.parentNode.replaceChild(new_element6, old_element6);
+
+                let btnSalvar1 = document.getElementById('btnSalvar1');
+                while (btnSalvar1.childElementCount > 0) {
+                    btnSalvar1.removeChild(btnSalvar1.lastChild)
+                }
+        
+                var old_element4 = document.getElementById('btnSalvar1');
+                var new_element4 = old_element4.cloneNode(true);
+                old_element4.parentNode.replaceChild(new_element4, old_element4);
+        
+                document.getElementById('dialogJogador1').style.display='none';
+                document.getElementById('dialogJogador2').style.display='none';
+            });
+        });
+
+        let btnFecharDialog1 = document.getElementById('fecharDialog1');
+        btnFecharDialog1.appendChild(imageFechar);
+
+        btnFecharDialog1.addEventListener("click", () => {
+            document.getElementById('inputJogador1').value = "";
+
+            titulo2.style.display="none";
+            titulo.style.display="flex";
+            divBotoes.style.display = "inline-block";
+            divPontuacao.style.display = "none";
+            divVez.style.display= "none"
+            reset();
+    
+            let btnSalvar1 = document.getElementById('btnSalvar1');
+            while (btnSalvar1.childElementCount > 0) {
+                btnSalvar1.removeChild(btnSalvar1.lastChild)
+            }
+    
+            var old_element4 = document.getElementById('btnSalvar1');
+            var new_element4 = old_element4.cloneNode(true);
+            old_element4.parentNode.replaceChild(new_element4, old_element4);
+    
+            document.getElementById('dialogJogador1').style.display='none';
+            document.getElementById('dialogJogador2').style.display='none';
         });
     });
 
@@ -933,5 +1028,8 @@ window.onload = function () {
         var old_element4 = document.getElementById('btnSalvar1');
         var new_element4 = old_element4.cloneNode(true);
         old_element4.parentNode.replaceChild(new_element4, old_element4);
+
+        document.getElementById('dialogJogador1').style.display='none';
+        document.getElementById('dialogJogador2').style.display='none';
     });
 };
