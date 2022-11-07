@@ -4,6 +4,12 @@ let jogador1 = 'Jogador 1';
 let jogador2 = 'Jogador 2';
 let esperandoComputador = false;
 
+let corPeca;
+let xPeca;
+let yPeca;
+
+let pecas= new Set();
+
 let pontosJogador1 = 0;
 let pontosJogador2 = 0;
 
@@ -84,6 +90,11 @@ function montarTabuleiro() {
     ctx.stroke();
 
 
+    bolinhas();
+
+}
+
+function bolinhas() {
     for (var i = 1; i < 5; i++) {
         let x = 160;
         let y = 160;
@@ -104,31 +115,96 @@ function montarTabuleiro() {
         ctx.fillStyle = 'black';
         ctx.fill();
     }
-
 }
 
 function updateTabuleiro() {
-    montarTabuleiro();
+
+    for (let peca of pecas) {
+        if (peca.cor === '#00bc8c') {
+            peca.remove();
+            pecas.delete(peca);
+        }
+    }
+
     for (let i = 2; i < tabuleiro.length; i++) {
         for (let j = 2; j < tabuleiro[i].length; j++) {
-            if (tabuleiro[i][j] !== 'X') {
+            if (tabuleiro[i][j] !== 'X' && tabuleiro[i][j] !== '?') {
                 let cor = 'white';
                 if (tabuleiro[i][j] === 'P') {
                     cor = 'black'
                 }
-                adicionarPeca(cor, (i - 2) * 80 + 40, (j - 2) * 80 + 40);
+                adicionaPeca(cor, (i - 2) * 80 + 40, (j - 2) * 80 + 40);
             }
         }
     }
 }
 
-function adicionarPeca(cor, x, y) {
-    ctx.beginPath();
-    ctx.arc(x, y, 35, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fillStyle = cor;
-    ctx.fill();
+function adicionaPeca(cor, x, y) {
+    if (!pecas.length) {
+        pecaNova = new Peca(cor, x, y);
+        pecas.add(pecaNova);
+    }
+    for (let peca of pecas) {
+        if (peca.x === x && peca.y === y) {
+            peca.cor=cor;
+            peca.update();
+        } else {
+            pecaNova = new Peca(cor, x, y);
+            pecas.add(pecaNova);
+        }
+    }
+
+    
 }
+
+class Peca {
+    constructor(cor, x, y) {
+        this.x = x;
+        this.y = y;
+        this.cor = cor;
+        this.opacity = 0;
+
+        this.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 35, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.globalAlpha=this.opacity/100;
+            ctx.fillStyle = cor;
+            ctx.fill();
+        };
+
+        this.incrementOpacity = function () {
+            this.opacity += 1;
+            for (let peca of pecas) {
+                if (peca.x === this.x && peca.y === this.y && peca.opacity !== this.opacity) {
+                    pecas.delete(peca);
+                }
+            }
+        }
+
+        this.remove = function () {
+            ctx.clearRect(this.x - 38.5, y - 38.5 , 77, 77);
+            bolinhas();
+        }
+
+        this.update = function () {
+            if (this.opacity < 110) {
+                this.incrementOpacity();
+                console.log('teste')
+            }
+            this.draw();
+        };
+    }
+}
+
+function start() {
+	for(var peca of pecas) {
+            peca.update();
+	}
+	requestAnimationFrame(start);
+}
+start();
 
 function getJogadasValidas(tabuleiro) {
     let peca = 'P';
@@ -459,7 +535,7 @@ function jogada(cor, x, y) {
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
 
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
 
         jogadorAtual += 1;
 
@@ -491,7 +567,7 @@ function jogada(cor, x, y) {
     }
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 }
 
@@ -533,7 +609,7 @@ function jogadaJogadorMaquina(cor, x, y) {
         let cX = 40 + (intX * 80);
         let cY = 40 + (intY * 80);
 
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
 
         jogadorAtual += 1;
 
@@ -585,7 +661,8 @@ function iniciaJogo(elementHide, elementShow) {
     let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 
     canvas.addEventListener('click', function (event) {
@@ -660,7 +737,7 @@ function iniciaJogoComputador(elementHide, elementShow) {
     let jogadasValidas = getJogadasValidas(tabuleiro);
 
     jogadasValidas.forEach(j => {
-        adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+        adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
     })
 
     canvas.addEventListener('click', function (event) {
@@ -677,12 +754,14 @@ function iniciaJogoComputador(elementHide, elementShow) {
 
 function reset() {
     tabuleiro = [];
+    pecas = new Set();
 
     var old_element1 = document.getElementById("tabuleiro");
     var new_element1 = old_element1.cloneNode(true);
     old_element1.parentNode.replaceChild(new_element1, old_element1);
 
     jogadorAtual = 0;
+    montarTabuleiro();
     preencheTabuleiro();
     updateTabuleiro();
     pontosJogador1 = 0;
@@ -719,7 +798,7 @@ function jogadaComputador(cor) {
         let cX = 40 + ((intX - 2) * 80);
         let cY = 40 + ((intY - 2) * 80);
     
-        adicionarPeca(cor, cX, cY);
+        adicionaPeca(cor, cX, cY);
     
         jogadorAtual += 1;
     
@@ -748,9 +827,10 @@ function jogadaComputador(cor) {
     
             document.getElementById('vez').innerHTML = vencedor;
         }
-    
+
         jogadasValidas.forEach(j => {
-            adicionarPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
+            
+            adicionaPeca('#00bc8c', (j.x - 2) * 80 + 40, (j.y - 2) * 80 + 40);
         })
     
         setTimeout(function () { esperandoComputador = false }, 1000);
