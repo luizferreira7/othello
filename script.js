@@ -199,7 +199,6 @@ class Peca {
         this.update = function () {
             if (this.opacity < 110) {
                 this.incrementOpacity();
-                console.log('teste')
             }
             this.draw();
         };
@@ -749,12 +748,37 @@ function iniciaJogoComputador(elementHide, elementShow) {
     })
 
     canvas.addEventListener('click', function (event) {
-        if (!esperandoComputador) {
-            x = event.offsetX;
-            y = event.offsetY;
+
+        let jogadaValida = false
+
+        let x = event.offsetX;
+        let y = event.offsetY;
+
+        let intX = Math.floor(x / 80);
+        let intY = Math.floor(y / 80);
+
+        if (x % 80 <= (intX + 0.1) || y % 80 <= (intY + 0.1)) {
+            jogadaValida = false;
+        } else {
+            let jogada = { x: intX + 2, y: intY + 2 };
+
+            let jogadasValidas = getJogadasValidas(tabuleiro);
+
+            var contains = jogadasValidas.some(j => {
+                return JSON.stringify(jogada) === JSON.stringify(j);
+            });
+    
+            if (contains) {
+                jogadaValida = true;
+            }
+        }
+
+        if (!esperandoComputador && jogadaValida) {
             jogadaJogadorMaquina(jogadorAtual % 2 === 0 ? 'black' : 'white', x, y);
+            bolinhas();
             esperandoComputador = true;
             setTimeout(function () { jogadaComputador('white') }, 2000);
+            bolinhas();
         }
 
     });
